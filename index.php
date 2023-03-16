@@ -15,5 +15,7 @@ require_once "modelos/ventas.modelo.php";
 require_once "extensiones/vendor/autoload.php";
 
 
+//Hola Mundo
+
 $plantilla = new ControladorPlantilla();
 $plantilla -> ctrPlantilla();

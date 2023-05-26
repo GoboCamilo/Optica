@@ -109,7 +109,7 @@
         <!-- row para listado de productos/inventario -->
         <div class="row">
             <div class="col-lg-12">
-                <table id="tbl_productos" class="table table-striped w-100 shadow">
+                <table id="tbl_productos" class="table table-striped w-100 shadow border border-secondary">
                     <thead class="bg-info">
                         <tr style="font-size: 15px;">
                             <th></th>
@@ -121,7 +121,8 @@
                             <th>Imagen</th>
                             <th>Estado</th>                             
                             <th>P. Venta</th>
-                            <th>Utilidad</th>                            
+                            <th>Utilidad</th>
+                            <th>Stock</th>                            
                             <th>Fecha Creación</th>                            
                             <th class="text-cetner">Opciones</th>
                         </tr>
@@ -158,18 +159,17 @@
             <!-- cuerpo del modal -->
             <div class="modal-body">
     
-                <form class="needs-validation" novalidate >
+                <form id="frm-datos-producto" class="needs-validation" novalidate >
                     <!-- Abrimos una fila -->
                     <div class="row">
 
                         <!-- Columna para registro del codigo de barras -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group mb-2">
-                                <label class="" for="iptCodigoReg"><i class="fas fa-barcode fs-6"></i>
+                                <label class="" for="codigo"><i class="fas fa-barcode fs-6"></i>
                                     <span class="small">Código del producto</span><span class="text-danger">*</span>
                                 </label>
-                                <input type="text" class="form-control form-control-sm" id="iptCodigoReg"
-                                    name="iptCodigoReg" placeholder="Código" required>
+                                <input type="text" class="form-control form-control-sm" id="codigo" name="codigo" placeholder="Código" required>
                                 <div class="invalid-feedback">Debe ingresar el codigo</div>
                             </div>
                         </div>
@@ -177,11 +177,11 @@
                         <!-- Columna para registro de la categoría del producto -->
                         <div class="col-12  col-lg-6">
                             <div class="form-group mb-2">
-                                <label class="" for="selCategoriaReg"><i class="fas fa-dumpster fs-6"></i>
+                                <label class="" for="idCategoria"><i class="fas fa-dumpster fs-6"></i>
                                     <span class="small">Categoría</span><span class="text-danger">*</span>
                                 </label>
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example"
-                                    id="selCategoriaReg" required>
+                                    id="idCategoria" name="idCategoria" required>
                                 </select>
                                 <div class="invalid-feedback">Seleccione la categoría</div>
                             </div>
@@ -190,54 +190,77 @@
                         <!-- Columna para registro de la descripción del producto -->
                         <div class="col-12">
                             <div class="form-group mb-2">
-                                <label class="" for="iptDescripcionReg"><i
+                                <label class="" for="producto"><i
                                         class="fas fa-file-signature fs-6"></i> <span
                                         class="small">Nombre del producto</span><span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-sm" id="iptDescripcionReg"
+                                <input type="text" class="form-control form-control-sm" id="producto" name="producto"
                                     placeholder="Descripción" required>
                                 <div class="invalid-feedback">Debe ingresar el nombre del producto</div>
                             </div>
                         </div>
 
                         <!-- Columna para registro del Precio de Venta -->
-                        <div class="col-12 col-lg-4">
+                        <div class="col-12">
                             <div class="form-group mb-2">
-                                <label class="" for="iptImagenReg"><i
-                                        class="fas fa-dollar-sign fs-6"></i> <span 
-                                        class="small">Imagen del producto</span><span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-sm" id="iptImagenReg"
-                                    placeholder="Imagen del producto" required>
-                                <div class="invalid-feedback">Debe ingresar la imagen</div>
+                                <label for="imagen">
+                                    <i class="fas fa-image fs-6"></i> 
+                                    <span class="small">Selecione una Imagen</span>
+                                </label>
+                                <input type="file" 
+                                        class="form-control form-control-sm" 
+                                        id="imagen"
+                                        name="imagen"
+                                        accept="image/*"
+                                        onchange="previewFile(this)">
                             </div>
                         </div>
 
-                        <!-- Columna para registro del Precio de Venta -->
-                        <div class="col-12 col-lg-4">
-                            <div class="form-group mb-2">
-                                <label class="" for="iptPrecioVentaReg"><i
-                                        class="fas fa-dollar-sign fs-6"></i> <span class="small">Precio
-                                        Venta</span><span class="text-danger">*</span></label>
-                                <input type="number" min="0" class="form-control form-control-sm" id="iptPrecioVentaReg"
-                                    placeholder="Precio de Venta" step="0.01" required>
-                                <div class="invalid-feedback">Debe ingresar el precio de venta</div>
+                        <div class="col-12 col-lg-6 my-1">
+                            <div style="width: 100%; height: 280px;">
+                                <img id="previewImg" src="vistas/assets/imagenes/no_image.jpg" class="border border-secondary"
+                                    style="object-fit: cover; width: 100%; height: 100%;" alt="">
                             </div>
                         </div>
 
-                        <!-- Columna para registro de la Utilidad -->
-                        <div class="col-12 col-lg-4">
-                            <div class="form-group mb-2">
-                                <label class="" for="iptUtilidadReg"><i
-                                        class="fas fa-dollar-sign fs-6"></i> <span class="small">Utilidad</span></label>
-                                <input type="number" min="0" class="form-control form-control-sm" id="iptUtilidadReg"
-                                    placeholder="Utilidad" step="0.01" required>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <!-- Columna para registro del Precio de Venta -->
+                                <div class="col-12 ">
+                                    <div class="form-group mb-2">
+                                        <label class="" for="precioVenta"><i
+                                                class="fas fa-dollar-sign fs-6"></i> <span class="small">Precio
+                                                Venta</span><span class="text-danger">*</span></label>
+                                        <input type="number" min="0" class="form-control form-control-sm" id="precioVenta" name="precioVenta"
+                                            placeholder="Precio de Venta" step="0.01" required>
+                                        <div class="invalid-feedback">Debe ingresar el precio de venta</div>
+                                    </div>
+                                </div>
+
+                                <!-- Columna para registro de la Utilidad -->
+                                <div class="col-12">
+                                    <div class="form-group mb-2">
+                                        <label class="" for="costoPromedio"><i
+                                                class="fas fa-dollar-sign fs-6"></i> <span class="small">Utilidad</span></label>
+                                        <input type="number" min="0" class="form-control form-control-sm" id="costoPromedio" name="costoPromedio"
+                                            placeholder="Utilidad" step="0.01" required>
+                                    </div>
+                                </div>
+                                <!-- Columna para registro del Stock del producto -->
+                                <div class="col-12">
+                                    <div class="form-group mb-2">
+                                        <label class="" for="stock"><i class="fas fa-plus-circle fs-6"></i>
+                                            <span class="small">Stock</span><span class="text-danger">*</span></label>
+                                        <input type="number" min="0" class="form-control form-control-sm" id="stock" name="stock"
+                                            placeholder="Stock" required>
+                                        <div class="invalid-feedback">Debe ingresar el stock</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                         <!-- creacion de botones para cancelar y guardar el producto -->
                         <button type="button" class="btn btn-danger mt-3 mx-2" style="width:170px;"
                             data-bs-dismiss="modal" id="btnCancelarRegistro">Cancelar</button>
-                        <button type="button" style="width:170px;" class="btn btn-primary mt-3 mx-2"
-                            id="btnGuardarProducto" onclick="formSubmitClick()">Guardar Producto</button>
+                        <button type="button" style="width:170px;" class="btn btn-primary mt-3 mx-2"id="btnGuardarProducto">Guardar Producto</button>
                         <!-- <button class="btn btn-default btn-success" type="submit" name="submit" value="Submit">Save</button> -->
 
                     </div>
@@ -309,260 +332,626 @@
 
 
 <script>
-
-    $(document).ready(function(){ 
-
-    var table;
     var accion;
-
-    $.ajax({
-        url: "ajax/productos.ajax.php",
-        type: "POST",
-        data: {'accion': 1 },//1: LISTAR PRODUCTOS
-        
-        dataType: 'json',
-        success: function(respuesta) {
-            console.log("respuesta", respuesta);
-        }
+    var table;
+    var operacion_stock = 0;
+/*===================================================================*/
+//INICIALIZAMOS EL MENSAJE DE TIPO TOAST (EMERGENTE EN LA PARTE SUPERIOR)
+/*===================================================================*/
+    var Toast = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 3000
     });
 
+    $(document).ready(function(){
     /*===================================================================*/
     //SOLICITUD AJAX PARA CARGAR SELECT DE CATEGORIAS
     /*===================================================================*/
-    $.ajax({
-        url: "ajax/categorias.ajax.php",
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        success: function(respuesta) {
+ //   $.ajax({
+   //     url: "ajax/categorias.ajax.php",
+     //   cache: false,
+       // contentType: false,
+        //processData: false,
+        //dataType: 'json',
+        //success: function(respuesta) {
 
-            var options = '<option selected value="">Seleccione una categoría</option>';
+          //  var options = '<option selected value="">Seleccione una categoría</option>';
 
-            for (let index = 0; index < respuesta.length; index++) {
-                options = options + '<option value=' + respuesta[index][0] + '>' + respuesta[index][
-                    1
-                ] + '</option>';
-            }
+           // for (let index = 0; index < respuesta.length; index++) {
+             //   options = options + '<option value=' + respuesta[index][0] + '>' + respuesta[index][
+               //     1
+               // ] + '</option>';
+           // }
 
-            $("#selCategoriaReg").append(options);
-        }
-    });
+           // $("#idCategoria").append(options);
+       // }
+   // });
 
-    table = $("#tbl_productos").DataTable({
+    /*===================================================================*/
+        // CARGA DEL LISTADO CON EL PLUGIN DATATABLE JS
+        /*===================================================================*/
+        table = $("#tbl_productos").DataTable({
+            dom: 'Bfrtip',
+            buttons: [{
+                    text: 'Agregar Producto',
+                    className: 'addNewRecord',
+                    action: function(e, dt, node, config) {
+                        $("#mdlGestionarProducto").modal('show');
+                        accion = 2; //registrar
+                        $(".needs-validation").removeClass("was-validated");
+                        
+                        /*===================================================================*/
+                        //SOLICITUD AJAX PARA CARGAR SELECT DE CATEGORIAS
+                        /*===================================================================*/
+                        $.ajax({
+                            url: "ajax/categorias.ajax.php",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            success: function(respuesta) {
 
-        dom: 'Bfrtip',
-        buttons: [{
-                text: 'Agregar Producto',
-                className: 'addNewRecord',
-                action: function(e, dt, node, config) {
-                    $("#mdlGestionarProducto").modal('show');
-                    accion = 2; //registrar
+                                var options = '<option selected value="">Seleccione una categoría</option>';
+
+                                for (let index = 0; index < respuesta.length; index++) {
+                                    options = options + '<option value=' + respuesta[index][0] + '>' + respuesta[index][
+                                        1
+                                    ] + '</option>';
+                                }
+
+                                $("#idCategoria").append(options);
+                            }
+                        });
+                    }
+                },
+                'excel', 'print', 'pageLength'
+            ],
+            pageLength: [5, 10, 15, 30, 50, 100],
+            pageLength: 10,
+            ajax: {
+                url: "ajax/productos.ajax.php",
+                dataSrc: '',
+                type: "POST",
+                data: {
+                    'accion': 1 //1: LISTAR PRODUCTOS
+                },
+            },
+            responsive: {
+                details: {
+                    type: 'column'
                 }
             },
-            'excel', 'print', 'pageLength'
-        ],
-        pageLength: [5, 10, 15, 30, 50, 100],
-        pageLength: 10,
-
-        ajax: {
-            url: "ajax/productos.ajax.php",
-            dataSrc: '', 
-            type: "POST",
-            data: {'accion': 1 },//1: LISTAR PRODUCTOS
-
-        },
-        responsive: {
-            details: {
-                type: 'column'
-            }
-        },
-
-        columnDefs:[
-            {
-                targets: 0,
-                orderable: false,
-                className: 'control'
-            },
-            {
-                targets: 1,
-                visible: false
-            },
-            {
-                targets: 3,
-                visible: false
-            },
-            {
-                targets: 11,
-                orderable: false,
-                render: function(data, type, full, meta) {
-                    return "<center>" +
-                        "<span class='btnEditarProducto text-warning px-3' style='cursor:pointer;'>" +
-                        "<i class='fas fa-edit fs-5'></i>" +
-                        "</span>" +
-                        "<span class='btnEliminarProducto text-danger px-3' style='cursor:pointer;'>" +
-                        "<i class='fas fa-trash fs-5'></i>" +
-                        "</span>" +
-                        "</center>"
+            columnDefs:[{
+                    targets: 0,
+                    orderable: false,
+                    className: 'control'
+                },
+                {
+                    targets: 1,
+                    visible: false
+                },
+                {
+                    targets: 3,
+                    visible: false
+                },
+                {
+                    targets: 12,
+                    orderable: false,
+                    render: function(data, type, full, meta) {
+                        return "<center>" +
+                            "<span class='btnEditarProducto text-primary px-1' style='cursor:pointer;'>" +
+                            "<i class='fas fa-pencil-alt fs-5'></i>" +
+                            "</span>" +
+                            "<span class='btnAumentarStock text-success px-1' style='cursor:pointer;'>" +
+                            "<i class='fas fa-plus-circle fs-5'></i>" +
+                            "</span>" +
+                            "<span class='btnDisminuirStock text-warning px-1' style='cursor:pointer;'>" +
+                            "<i class='fas fa-minus-circle fs-5'></i>" +
+                            "</span>" +
+                            "<span class='btnEliminarProducto text-danger px-1' style='cursor:pointer;'>" +
+                            "<i class='fas fa-trash fs-5'></i>" +
+                            "</span>" +
+                            "</center>"
+                    }
                 }
+            ],
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
             }
-        ],
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
-        }
-    });
+        });
 
     /*===================================================================*/
     // EVENTOS PARA CRITERIOS DE BUSQUEDA (CODIGO, CATEGORIA Y PRODUCTO)
     /*===================================================================*/
-    $("#iptCodigo").keyup(function() {
-        table.column($(this).data('index')).search(this.value).draw();
-    })
+        $("#iptCodigo").keyup(function() {
+            table.column($(this).data('index')).search(this.value).draw();
+        })
 
-    $("#iptCategoria").keyup(function() {
-        table.column($(this).data('index')).search(this.value).draw();
-    })
+        $("#iptCategoria").keyup(function() {
+            table.column($(this).data('index')).search(this.value).draw();
+        })
 
-    $("#iptProducto").keyup(function() {
-        table.column($(this).data('index')).search(this.value).draw();
-    });
+        $("#iptProducto").keyup(function() {
+            table.column($(this).data('index')).search(this.value).draw();
+        });
 
     /*===================================================================*/
     // EVENTOS PARA CRITERIOS DE BUSQUEDA POR RANGO (PREVIO VENTA)
     /*===================================================================*/
-    $("#iptPrecioVentaDesde, #iptPrecioVentaHasta").keyup(function() {
-        table.draw();
-    })
+        $("#iptPrecioVentaDesde, #iptPrecioVentaHasta").keyup(function() {
+            table.draw();
+        })
 
-    $.fn.dataTable.ext.search.push(
+        $.fn.dataTable.ext.search.push(
 
-        function(settings, data, dataIndex) {
+            function(settings, data, dataIndex) {
 
-            var precioDesde = parseFloat($("#iptPrecioVentaDesde").val());
-            var precioHasta = parseFloat($("#iptPrecioVentaHasta").val());
+                var precioDesde = parseFloat($("#iptPrecioVentaDesde").val());
+                var precioHasta = parseFloat($("#iptPrecioVentaHasta").val());
 
-            var col_venta = parseFloat(data[8]);
+                var col_venta = parseFloat(data[8]);
 
-            if ((isNaN(precioDesde) && isNaN(precioHasta)) ||
-                (isNaN(precioDesde) && col_venta <= precioHasta) ||
-                (precioDesde <= col_venta && isNaN(precioHasta)) ||
-                (precioDesde <= col_venta && col_venta <= precioHasta)) {
-                return true;
+                if ((isNaN(precioDesde) && isNaN(precioHasta)) ||
+                    (isNaN(precioDesde) && col_venta <= precioHasta) ||
+                    (precioDesde <= col_venta && isNaN(precioHasta)) ||
+                    (precioDesde <= col_venta && col_venta <= precioHasta)) {
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
-        }
-    )
+        )
 
     /*===================================================================*/
     // EVENTO PARA LIMPIAR INPUTS DE CRITERIOS DE BUSQUEDA
     /*===================================================================*/
-    $("#btnLimpiarBusqueda").on('click', function() {
+        $("#btnLimpiarBusqueda").on('click', function() {
 
-        $("#iptCodigo").val('')
-        $("#iptCategoria").val('')
-        $("#iptProducto").val('')
-        $("#iptPrecioVentaDesde").val('')
-        $("#iptPrecioVentaHasta").val('')
+            $("#iptCodigo").val('')
+            $("#iptCategoria").val('')
+            $("#iptProducto").val('')
+            $("#iptPrecioVentaDesde").val('')
+            $("#iptPrecioVentaHasta").val('')
 
-        table.search('').columns().search('').draw();
-    })
+            table.search('').columns().search('').draw();
+        })
 
-    $("#btnCancelarRegistro, #btnCerrarModal").on('click', function() {
-
-        $("#validate_codigo").css("display", "none");
-        $("#validate_categoria").css("display", "none");
-        $("#validate_descripcion").css("display", "none");
-        $("#validate_precio_compra").css("display", "none");
-        $("#validate_precio_venta").css("display", "none");
-        $("#validate_stock").css("display", "none");
-        $("#validate_min_stock").css("display", "none");
-
-        $("#iptCodigoReg").val("");
-        $("#selCategoriaReg").val(0);
-        $("#iptDescripcionReg").val("");
-        $("#iptiptImagenReg").val("");
-        $("#iptPrecioVentaReg").val("");
-        $("#iptUtilidadReg").val("");
-
-    })
-
-   
-
-    })
-
-    
+        $("#btnCancelarRegistro, #btnCerrarModal").on('click', function() {
 
 
-    /*===================================================================*/
-    //EVENTO QUE GUARDA LOS DATOS DEL PRODUCTO, PREVIA VALIDACION DEL INGRESO DE LOS DATOS OBLIGATORIOS
-    /*===================================================================*/
-    function formSubmitClick () {
+            $("#codigo").val("");
+            $("#idCategoria").val(0);
+            $("#producto").val("");
+            $("#imagen").val("");
+            $("#precioVenta").val("");
+            $("#costoPromedio").val("");
 
-        Swal.fire({
-            title: 'Está seguro de registrar el producto?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, deseo registrarlo!',
-            cancelButtonText: 'Cancelar',
-        }).then((result) => {
+        })
 
-            if (result.isConfirmed) {
+        /* ======================================================================================
+    EVENTO AL DAR CLICK EN EL BOTON AUMENTAR STOCK
+    =========================================================================================*/
+        $('#tbl_productos tbody').on('click', '.btnAumentarStock', function() {
+
+            operacion_stock = 1; //sumar stock
+            accion = 3;
+
+            $("#mdlGestionarStock").modal('show'); //MOSTRAR VENTANA MODAL
+
+            $("#titulo_modal_stock").html('Aumentar Stock'); // CAMBIAR EL TITULO DE LA VENTANA MODAL
+            $("#titulo_modal_label").html('Agregar al Stock'); // CAMBIAR EL TEXTO DEL LABEL DEL INPUT PARA INGRESO DE STOCK
+            $("#iptStockSumar").attr("placeholder", "Ingrese cantidad a agregar al Stock"); //CAMBIAR EL PLACEHOLDER 
+
+            var data = table.row($(this).parents('tr')).data(); //OBTENER EL ARRAY CON LOS DATOS DE CADA COLUMNA DEL DATATABLE
+
+            $("#stock_codigoProducto").html(data[2])	//CODIGO DEL PRODUCTO DEL DATATABLE
+            $("#stock_Producto").html(data[5]) 			//NOMBRE DEL PRODUCTO DEL DATATABLE
+            $("#stock_Stock").html(data[10])				//STOCK ACTUAL DEL PRODUCTO DEL DATATABLE
+
+            $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+
+        })
+
+        /* ======================================================================================
+    EVENTO AL DAR CLICK EN EL BOTON DISMINUIR STOCK
+    =========================================================================================*/
+        $('#tbl_productos tbody').on('click', '.btnDisminuirStock', function() {
+
+            operacion_stock = 2; //restar stock
+            accion = 3;
+            $("#mdlGestionarStock").modal('show'); //MOSTRAR VENTANA MODAL
+
+            $("#titulo_modal_stock").html('Disminuir Stock'); // CAMBIAR EL TITULO DE LA VENTANA MODAL
+            $("#titulo_modal_label").html('Disminuir al Stock'); // CAMBIAR EL TEXTO DEL LABEL DEL INPUT PARA INGRESO DE STOCK
+            $("#iptStockSumar").attr("placeholder", "Ingrese cantidad a disminuir al Stock"); //CAMBIAR EL PLACEHOLDER 
+
+
+            var data = table.row($(this).parents('tr')).data(); //OBTENER EL ARRAY CON LOS DATOS DE CADA COLUMNA DEL DATATABLE
+
+            $("#stock_codigoProducto").html(data[2])	//CODIGO DEL PRODUCTO DEL DATATABLE
+            $("#stock_Producto").html(data[5])			//NOMBRE DEL PRODUCTO DEL DATATABLE
+            $("#stock_Stock").html(data[10])				//STOCK ACTUAL DEL PRODUCTO DEL DATATABLE
+
+            $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+
+        })
+
+        /* ======================================================================================
+    EVENTO QUE LIMPIA EL INPUT DE INGRESO DE STOCK AL CERRAR LA VENTANA MODAL
+    =========================================================================================*/
+        $("#btnCancelarRegistroStock, #btnCerrarModalStock").on('click', function() {
+                $("#iptStockSumar").val("")
+        })
+
+    /* ======================================================================================
+    EVENTO AL DIGITAR LA CANTIDAD A AUMENTAR O DISMINUIR DEL STOCK
+    =========================================================================================*/
+        $("#iptStockSumar").keyup(function() {
+
+            // console.log($("#iptStockSumar").val());
+
+            if (operacion_stock == 1) {
+
+                if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+                    var stockActual = parseFloat($("#stock_Stock").html());
+                    var cantidadAgregar = parseFloat($("#iptStockSumar").val());
+
+                    $("#stock_NuevoStock").html(stockActual + cantidadAgregar);
+
+                } else {
+
+                    // Toast.fire({
+                    //     icon: 'warning',
+                    //     title: 'Ingrese un valor mayor a 0'
+                    // });
+
+                    mensajeToast('error', 'Ingrese un valor mayor a 0');
+
+                    $("#iptStockSumar").val("")
+                    $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+
+                }
+
+            } else {
+
+                if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+                    var stockActual = parseFloat($("#stock_Stock").html());
+                    var cantidadAgregar = parseFloat($("#iptStockSumar").val());
+
+                    $("#stock_NuevoStock").html(stockActual - cantidadAgregar);
+
+                    if (parseInt($("#stock_NuevoStock").html()) < 0) {
+
+                       // Toast.fire({
+                        //   icon: 'warning',
+                        // title: 'La cantidad a disminuir no puede ser mayor al stock actual (Nuevo stock < 0)'
+                        // });
+
+                        mensajeToast('error', 'La cantidad a disminuir no puede ser mayor al stock actual (Nuevo stock < 0)');
+
+                        $("#iptStockSumar").val("");
+                        $("#iptStockSumar").focus();
+                        $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+                    }
+                } else {
+                    
+                    //Toast.fire({
+                    //    icon: 'warning',
+                    //    title: 'Ingrese un valor mayor a 0'
+                    // });
+
+                    mensajeToast('error', 'Ingrese un valor mayor a 0');
+                    
+                    $("#iptStockSumar").val("")                
+                    $("#stock_NuevoStock").html(parseFloat($("#stock_Stock").html()));
+                }
+            }
+
+        })
+
+    /* ======================================================================================
+    EVENTO QUE REGISTRA EN BD EL AUMENTO O DISMINUCION DE STOCK
+    =========================================================================================*/
+        $("#btnGuardarNuevorStock").on('click', function() {
+
+            if ($("#iptStockSumar").val() != "" && $("#iptStockSumar").val() > 0) {
+
+                var nuevoStock = parseFloat($("#stock_NuevoStock").html()),
+                    codigo_producto = $("#stock_codigoProducto").html();
 
                 var datos = new FormData();
 
-                datos.append("accion", accion);
-                datos.append("codigo", $("#iptCodigoReg").val()); //codigo_producto
-                datos.append("idCategoria", $("#selCategoriaReg").val()); //id_categoria_producto
-                datos.append("producto", $("#iptDescripcionReg").val()); //descripcion_producto
-                datos.append("imgen", $("#iptImagenReg").val()); //precio_compra_producto
-                datos.append("precioVenta", $("#iptPrecioVentaReg").val()); //precio_venta_producto
-                datos.append("costoPromedio", $("#iptUtilidadReg").val()); //utilidad
-                
-                
+                datos.append('accion', accion);
+                datos.append('nuevoStock', nuevoStock);
+                datos.append('codigo_producto', codigo_producto)
+                datos.append('tipo_movimiento', operacion_stock);
+
                 $.ajax({
                     url: "ajax/productos.ajax.php",
                     method: "POST",
                     data: datos,
-                    cache: false,
-                    contentType: false,
                     processData: false,
+                    contentType: false,
                     dataType: 'json',
                     success: function(respuesta) {
 
-                        if (respuesta == "ok") {
+                        $("#stock_NuevoStock").html("");
+                        $("#iptStockSumar").val("");
 
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'El producto se registro corretamente'
-                            });
+                        $("#mdlGestionarStock").modal('hide');
+                        
+                        table.ajax.reload();
 
-                            table.ajax.reload();
+                        //Swal.fire({
+                        //    position: 'center',
+                        //    icon: 'success',
+                        //    title: 'Se actualizó el stock correctamente.!',
+                        //    showConfirmButton: false,
+                        //    timer: 1500
+                        //})
 
-                            $("#mdlGestionarProducto").modal('hide');
-
-                            $("#iptCodigoReg").val("");
-                            $("#selCategoriaReg").val(0);
-                            $("#iptDescripcionReg").val("");
-                            $("#iptImagenReg").val("");
-                            $("#iptPrecioVentaReg").val("");
-                            $("#iptUtilidadReg").val("");
-
-                        } else {
-                            Toast.fire({
-                                icon: 'error',
-                                title: 'El producto no se pudo registrar'
-                            });
-                        }
+                        mensajeToast('success', 'Se actualizó el stock correctamente.!')
 
                     }
                 });
 
+            } else {
+                //Toast.fire({
+                //    icon: 'warning',
+                //    title: 'Debe ingresar la cantidad a aumentar'
+                // });
+
+                mensajeToast('error', 'Debe ingresar la cantidad a aumentar');
+
+                return false;
+
             }
+
         })
-       
+
+    /* ======================================================================================
+    EVENTO AL DAR CLICK EN EL BOTON EDITAR PRODUCTO
+    =========================================================================================*/
+        $('#tbl_productos tbody').on('click', '.btnEditarProducto', function() {
+
+            accion = 4; //seteamos la accion para editar
+
+            $("#mdlGestionarProducto").modal('show');
+
+            var data = ($(this).parents('tr').hasClass('child')) ?
+                table.row($(this).parents().prev('tr')).data() :
+                table.row($(this).parents('tr')).data();
+
+            $("#codigo").val(data[2]);
+            $("#idCategoria").val(data[3]);
+            $("#producto").val(data[5]);
+            $("#iptPrecioCompraReg").val(data[6]);
+            $("#precioVenta").val(data[7]);
+            $("#costoPromedio").val(data[8]);
+            $("#stock").val(data[9].replace(' Und(s)', '').replace(' Kg(s)', ''));
+            $("#iptMinimoStockReg").val(data[10].replace(' Und(s)', '').replace(' Kg(s)', ''));
+
+        })
+
+        /* ======================================================================================
+    EVENTO AL DAR CLICK EN EL BOTON ELIMINAR PRODUCTO
+    =========================================================================================*/
+        $('#tbl_productos tbody').on('click', '.btnEliminarProducto', function() {
+            
+            accion = 5; //seteamos la accion para editar
+            
+            var data = table.row($(this).parents('tr')).data();
+
+            var codigo = data["codigo"];
+
+            Swal.fire({
+                title: 'Está seguro de eliminar el producto?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, deseo eliminarlo!',
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+
+                    var datos = new FormData();
+
+                    datos.append("accion", accion);
+                    datos.append("codigo", codigo); //codigo_producto               
+
+                    $.ajax({
+                        url: "ajax/productos.ajax.php",
+                        method: "POST",
+                        data: datos,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(respuesta) {
+
+                                if (respuesta == "ok") {
+
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: 'El producto se eliminó correctamente'
+                                    });
+
+                                    table.ajax.reload();
+
+                                } else {
+                                    Toast.fire({
+                                        icon: 'error',
+                                        title: 'El producto no se pudo eliminar'
+                                    });
+                                }
+
+                            }
+                    });
+
+                }
+            })
+        })
+            
+
+    });
+
+    // CALCULA LA UTILIDAD
+    function calcularUtilidad() {
+
+        var iptPrecioCompraReg = $("#iptPrecioCompraReg").val();
+        var precioVenta = $("#precioVenta").val();
+        var Utilidad = precioVenta - iptPrecioCompraReg;
+
+        $("#costoPromedio").val(Utilidad.toFixed(2));
+
     }
 
- </script>
+    /*===================================================================*/
+    //EVENTO QUE LIMPIA LOS MENSAJES DE ALERTA DE INGRESO DE DATOS DE CADA INPUT AL CANCELAR LA VENTANA MODAL
+    /*===================================================================*/
+    document.getElementById("btnCancelarRegistro").addEventListener("click", function() {
+        $(".needs-validation").removeClass("was-validated");
+    })
+
+
+
+    /*===================================================================*/
+    //FUNCION QUE PERMITE PREVISUALIZAR LA IMAGEN
+    /*===================================================================*/
+    function previewFile(input) {
+
+        var file = $("input[type=file]").get(0).files[0];
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function() {
+                $("#previewImg").attr("src", reader.result);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    /*===================================================================*/
+    //EVENTO QUE GUARDA LOS DATOS DEL PRODUCTO, PREVIA VALIDACION DEL INGRESO DE LOS DATOS OBLIGATORIOS
+    /*===================================================================*/
+    document.getElementById("btnGuardarProducto").addEventListener("click", function() {
+
+        var imagen_valida = true;
+
+        // Get the forms we want to add validation styles to
+        var forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        var validation = Array.prototype.filter.call(forms, function(form) {
+
+            if (form.checkValidity() === true) {
+
+                console.log("Listo para registrar el producto")
+                
+                var file = $("#imagen").val();
+                
+                var ext = file.substring(file.lastIndexOf("."));
+
+                if (ext != ".jpg" && ext != ".png" && ext != ".gif" && ext != ".jpeg" && ext != ".webp") {
+                    mensajeToast('error', "La extensión " + ext + " no es una imagen válida");
+                    imagen_valida = false;
+                }
+                
+
+                if (!imagen_valida) {
+                    return;
+                }
+
+                const inputImage = document.querySelector('#imagen');
+
+                var formData = new FormData();
+
+                formData.append('detalle_producto', $("#frm-datos-producto").serialize());
+                formData.append('accion', 2)
+                formData.append('archivo[]', inputImage.files[0])
+
+                Swal.fire({
+                    title: 'Está seguro de registrar el producto?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, deseo registrarlo!',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        if (accion == 2) {
+                            var titulo_msj = "El producto se registró correctamente"
+                        }
+
+                        if (accion == 4) {
+                            var titulo_msj = "El producto se actualizó correctamente"
+                        }
+
+                        $.ajax({
+                            url: "ajax/productos.ajax.php",
+                            method: "POST",
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            success: function(respuesta) {
+                                console.log("respuesta", respuesta);
+
+                                if (respuesta == "ok") {
+
+                                    // Toast.fire({
+                                    //     icon: 'success',
+                                    //     title: titulo_msj
+                                    // });
+
+                                    mensajeToast('success', titulo_msj)
+                                    table.ajax.reload();
+
+                                    $("#mdlGestionarProducto").modal('hide');
+
+                                    $("#codigo").val("");
+                                    $("#idCategoria").val(0);
+                                    $("#producto").val("");
+                                    $("#precioVenta").val("");
+                                    $("#costoPromedio").val("");
+                                    $("#stock").val("");
+
+                                    $("#imagen").val('');                                    
+                                    $("#previewImg").attr("src", "vistas/assets/imagenes/no_image.jpg");
+
+                                } else {
+                                    console
+                                    //Toast.fire({
+                                      //  icon: 'error',
+                                        //title: 'El producto no se pudo registrar'
+                                        
+                                    //});
+                                }
+
+                            }
+                        });
+
+                    }
+                })
+            } else {
+                console.log("No paso la validacion")
+            }
+
+            form.classList.add('was-validated');
+
+            return false;
+
+        });
+    });
+</script>

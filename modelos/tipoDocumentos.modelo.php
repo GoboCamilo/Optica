@@ -7,8 +7,7 @@ class TipoDocumentosModelo{
 
     static public function mdlListarTipoDocumentos(){
 
-        $stmt = Conexion::conectar()->prepare("SELECT  idTipDoc, descripcion                                                                                                                
-                                                FROM mtipdoc c order BY idTipDoc DESC");
+        $stmt = Conexion::conectar()->prepare("SELECT  idTipMov, descripcion FROM mtipomovimiento c order BY idTipMov DESC");
 
         $stmt -> execute();
 

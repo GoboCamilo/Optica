@@ -70,7 +70,7 @@ class TablaTerceros{
   			=============================================*/ 
 
 		  	$item = "idCiudad";
-		  	$valor = $productos[$i]["idCiudad"];
+		  	$valor = $terceros[$i]["idCiudad"];
 
 		  	$ciudad = ControladorCiudad::ctrMostrarCiudad($item, $valor);
 

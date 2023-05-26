@@ -36,6 +36,12 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
+                            <a href="crear-venta" class="nav-link active">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Crear Venta</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="pais" class="nav-link active">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Caja</p>
@@ -44,11 +50,11 @@
                         <li class="nav-item">
                             <a href="ventas" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Ventas</p>
+                                <p>Administrar Ventas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="compras" class="nav-link">
+                            <a href="reporte-HClinica" class="nav-link">
                                 <i class="fas fa-cart-plus"></i>
                                 <p>Compras</p>
                             </a>

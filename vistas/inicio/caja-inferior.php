@@ -10,6 +10,7 @@
                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                     
                 </ol>
+            </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="d-block w-100" src="https://www.unicentrocucuta.com/wp-content/uploads/2016/02/OPTICA-VISUAL.jpg" alt="First slide">

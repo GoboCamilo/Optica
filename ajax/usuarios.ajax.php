@@ -5,6 +5,16 @@ require_once "../modelos/usuarios.modelo.php";
 
 class AjaxUsuarios{
 
+    public function ajaxListarTipoTerceros(){
+
+        $tipoTerceros = TipoTercerosControlador::ctrListarTipoTerceros();
+
+        echo json_encode($tipoTerceros, JSON_UNESCAPED_UNICODE);
+    }
+
+
+
+
 	/*=============================================
 	EDITAR USUARIO
 	=============================================*/	
@@ -97,3 +107,6 @@ if(isset( $_POST["validarUsuario"])){
 	$valUsuario -> ajaxValidarUsuario();
 
 }
+
+$tipoTerceros = new AjaxTipoTerceros();
+$tipoTerceros -> ajaxListarTipoTerceros();
